@@ -343,11 +343,13 @@ static bool ntime_valid_range(const char ntimehex[])
 	uint32_t ntime = 0;
 	if (strlen(ntimehex) != 8) return false;
 	sscanf(ntimehex, "%8x", &ntime);
+	if (ntime < 0x5b000000 || ntime > 0x60000000) // 14 Jan 2021
+		return false;
 	time(&rawtime);
 	return (abs(rawtime - ntime) < (30 * 60));
 }
 
-static bool valid_string_params(json_value *json_params)
+bool valid_string_params(json_value *json_params)
 {
 	for(int p=0; p < json_params->u.array.length; p++) {
 		if (!json_is_string(json_params->u.array.values[p]))

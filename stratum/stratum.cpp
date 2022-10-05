@@ -33,6 +33,10 @@ double g_stratum_difficulty;
 double g_stratum_min_diff;
 double g_stratum_max_diff;
 
+double g_stratum_nicehash_difficulty;
+double g_stratum_nicehash_min_diff;
+double g_stratum_nicehash_max_diff;
+
 int g_stratum_max_ttf;
 int g_stratum_max_cons = 5000;
 bool g_stratum_reconnect;
@@ -114,6 +118,8 @@ YAAMP_ALGO g_algos[] =
 	{"scrypt", scrypt_hash, 0x10000, 0, 0},
 	{"scryptn", scryptn_hash, 0x10000, 0, 0},
 	{"neoscrypt", neoscrypt_hash, 0x10000, 0, 0},
+
+	{"kawpow", kawpow_hash, 1, 0, 0},
 
 	{"c11", c11_hash, 1, 0, 0},
 	{"x11", x11_hash, 1, 0, 0},
@@ -224,6 +230,8 @@ YAAMP_ALGO *stratum_find_algo(const char *name)
 
 int main(int argc, char **argv)
 {
+	// kawpow_test();
+
 	if(argc < 2)
 	{
 		printf("usage: %s <algo>\n", argv[0]);
@@ -270,6 +278,10 @@ int main(int argc, char **argv)
 	g_stratum_difficulty = iniparser_getdouble(ini, "STRATUM:difficulty", 16);
 	g_stratum_min_diff = iniparser_getdouble(ini, "STRATUM:diff_min", g_stratum_difficulty/2);
 	g_stratum_max_diff = iniparser_getdouble(ini, "STRATUM:diff_max", g_stratum_difficulty*8192);
+	
+	g_stratum_nicehash_difficulty = iniparser_getdouble(ini, "STRATUM:nicehash", 16);
+	g_stratum_nicehash_min_diff = iniparser_getdouble(ini, "STRATUM:nicehash_diff_min", g_stratum_nicehash_difficulty/2);
+	g_stratum_nicehash_max_diff = iniparser_getdouble(ini, "STRATUM:nicehash_diff_max", g_stratum_nicehash_difficulty*8192);
 
 	g_stratum_max_cons = iniparser_getint(ini, "STRATUM:max_cons", 5000);
 	g_stratum_max_ttf = iniparser_getint(ini, "STRATUM:max_ttf", 0x70000000);
